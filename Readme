@@ -1,0 +1,18 @@
+#docker
+docker-compose build --no-cache
+docker-compose up   
+   
+#Add-Migration
+dotnet ef --startup-project services/PizzaApi.Service migrations add InitialMigration --project src/PizzaApi 
+
+#Update-Migration
+dotnet ef --startup-project services/PizzaApi.Service database update InitialMigration --project src/PizzaApi
+
+#Update to previous migration
+dotnet ef --startup-project services/PizzaApi.Service database update <previous-migration-name> --project src/PizzaApi
+
+#Revert all migrations and their changes to database
+dotnet ef --startup-project services/PizzaApi.Service database update 0 --project src/PizzaApi
+
+#Remove all migration files in project folder
+dotnet ef --startup-project services/PizzaApi.Service migrations remove --project src/PizzaApi 
