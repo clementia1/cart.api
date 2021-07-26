@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using CartApi.Entities;
 using CartApi.Models;
@@ -26,9 +27,22 @@ namespace CartApi.Services
 
         public async Task<bool> Add(int userId, ProductDto product)
         {
+            var key = GetKey(userId);
+            var cartString = await _cartStoreProvider.Get(userId.ToString());
             var entity = _mapper.Map<ProductEntity>(product);
+
+            if (cartString is null)
+            {
+                var newCart = new List<ProductEntity> { entity };
+                return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(newCart));
+            }
+            
+            var cart = _jsonSerializer.Deserialize<List<ProductEntity>>(cartString);
+            cart?.Add(entity); 
+
+
             var jsonString = _jsonSerializer.Serialize(entity);
-            return await _cartStoreProvider.Add(userId.ToString(), jsonString);
+            return await _cartStoreProvider.Add(key, jsonString);
         }
 
         public async Task<bool> Remove(int userId)
@@ -45,6 +59,11 @@ namespace CartApi.Services
             var entity = _jsonSerializer.Deserialize<ProductEntity>(value);
             var dto = _mapper.Map<ProductDto>(entity);
             return new GetProductResponse { Product = dto };
+        }
+
+        private string GetKey(int userId)
+        {
+            return userId.ToString();
         }
     }
 }
