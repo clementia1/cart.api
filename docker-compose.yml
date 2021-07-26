@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  cartapi.service:
+    image: cartapiservice
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 5007:5000
