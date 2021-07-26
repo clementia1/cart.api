@@ -36,10 +36,9 @@ namespace CartApi.Services
                 var newCart = new List<ProductEntity> { entity };
                 return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(newCart));
             }
-            
-            var cart = _jsonSerializer.Deserialize<List<ProductEntity>>(cartString);
-            cart?.Add(entity); 
 
+            var cart = _jsonSerializer.Deserialize<List<ProductEntity>>(cartString);
+            cart!.Add(entity);
 
             var jsonString = _jsonSerializer.Serialize(entity);
             return await _cartStoreProvider.Add(key, jsonString);
