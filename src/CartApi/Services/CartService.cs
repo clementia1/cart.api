@@ -56,15 +56,15 @@ namespace CartApi.Services
             return await _cartStoreProvider.Remove(userId.ToString());
         }
 
-        public async Task<GetProductResponse> GetByKey(int userId)
+        public async Task<IReadOnlyCollection<ProductDto>?> Get(int userId)
         {
             var value = await _cartStoreProvider.Get(userId.ToString());
-            
-            if (value is null) return new GetProductResponse();
+
+            if (value is null) return null;
             
             var entity = _jsonSerializer.Deserialize<IReadOnlyCollection<ProductEntity>>(value);
             var dto = _mapper.Map<IReadOnlyCollection<ProductDto>>(entity);
-            return new GetProductResponse { Products = dto };
+            return dto;
         }
 
         private string GetKey(int userId)

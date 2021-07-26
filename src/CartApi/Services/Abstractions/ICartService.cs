@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CartApi.Models;
 using CartApi.Models.GetProduct;
 
@@ -7,7 +8,7 @@ namespace CartApi.Services.Abstractions
     public interface ICartService
     {
         Task<bool> Add(int userId, ProductDto product);
-        Task<GetProductResponse> GetByKey(int userId);
+        Task<IReadOnlyCollection<ProductDto>?> Get(int userId);
         Task<bool> Remove(int userId);
     }
 }

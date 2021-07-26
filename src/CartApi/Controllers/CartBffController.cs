@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CartApi.Models.AddProduct;
+using CartApi.Models.GetProduct;
 using CartApi.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,14 +29,18 @@ namespace CartApi.Controllers
         public async Task<IActionResult> Add(int userId, [FromBody] AddProductRequest request)
         {
             var result = await _cartService.Add(userId, request.Product);
-            return Ok();
+            return result 
+                ? Ok(new AddProductResponse { Message = "Successfully added" })
+                : new JsonResult(new AddProductResponse { Message = "Operation failed"});
         }
         
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> Get(int userId)
         {
-            var result = await _cartService.GetByKey(userId);
-            return Ok(result);
+            var result = await _cartService.Get(userId);
+            return result is null
+                ? Ok(new GetProductResponse())
+                : Ok(new GetProductResponse {Products = result});
         }
         
         [HttpDelete("{userId:int}")]
