@@ -25,9 +25,17 @@ namespace CartApi.Controllers
         }
 
         [HttpPost("{userId:int}")]
-        public async Task Add(int userId, [FromBody] AddProductRequest request)
+        public async Task<IActionResult> Add(int userId, [FromBody] AddProductRequest request)
         {
             var result = await _cartService.Add(userId, request.Product);
+            return Ok();
+        }
+        
+        [HttpGet("{userId:int}")]
+        public async Task<IActionResult> Add(int userId)
+        {
+            var result = await _cartService.GetByKey(userId);
+            return Ok(result);
         }
     }
 }

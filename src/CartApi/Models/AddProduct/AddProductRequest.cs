@@ -2,6 +2,6 @@
 {
     public class AddProductRequest
     {
-        public ProductDto Product { get; set; }
+        public ProductDto Product { get; set; } = null!;
     }
 }

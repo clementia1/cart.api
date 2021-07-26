@@ -11,30 +11,26 @@ using StackExchange.Redis;
 
 namespace CartApi.Providers
 {
-    public class CarStoreProvider : ICarStoreProvider
+    public class CartStoreProvider : ICartStoreProvider
     {
-        private readonly ILogger<CarStoreProvider> _logger;
+        private readonly ILogger<CartStoreProvider> _logger;
         private readonly IRedisConnectionService _redisConnectionService;
-        private readonly IJsonSerializer _jsonSerializer;
         private readonly Config _config;
 
-        public CarStoreProvider(
-            ILogger<CarStoreProvider> logger,
+        public CartStoreProvider(
+            ILogger<CartStoreProvider> logger,
             IRedisConnectionService redisConnectionService,
-            IJsonSerializer jsonSerializer,
             IOptions<Config> config)
         {
             _logger = logger;
             _redisConnectionService = redisConnectionService;
-            _jsonSerializer = jsonSerializer;
             _config = config.Value;
         }
 
-        public async Task<bool> Add(string key, ProductEntity entity)
+        public async Task<bool> Add(string key, string value)
         {
             var redis = GetRedisDatabase();
-            var jsonString = _jsonSerializer.Serialize(entity);
-            return await redis.StringSetAsync(key, jsonString, _config.Redis.Expiry);
+            return await redis.StringSetAsync(key, value, _config.Redis.Expiry);
         }
 
         public async Task<string> Get(string key)

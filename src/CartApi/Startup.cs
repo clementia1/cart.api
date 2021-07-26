@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CartApi.Configuration;
+using CartApi.Providers;
+using CartApi.Providers.Abstractions;
+using CartApi.Services;
+using CartApi.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -38,10 +42,13 @@ namespace CartApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
-                    { Title = "PizzaApi", Version = "v1" });
+                    { Title = "CartApi", Version = "v1" });
             });
             
             services.Configure<Config>(AppConfiguration);
+            services.AddTransient<IJsonSerializer, JsonSerializer>();
+            services.AddTransient<ICartStoreProvider, CartStoreProvider>();
+            services.AddTransient<ICartService, CartService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -53,7 +60,7 @@ namespace CartApi
                 app.UseSwaggerUI(c =>
                     c.SwaggerEndpoint(
                         "/swagger/v1/swagger.json",
-                        "PizzaApi v1"));
+                        "CartApi v1"));
             }
 
             app.UseSerilogRequestLogging();

@@ -2,8 +2,6 @@ using System;
 using CartApi.Configuration;
 using CartApi.Services.Abstractions;
 using Microsoft.Extensions.Options;
-using CartApi.Configuration;
-using CartApi.Services.Abstractions;
 using StackExchange.Redis;
 
 namespace CartApi.Services
