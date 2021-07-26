@@ -441,5 +441,4 @@ fabric.properties
 .idea/config
 
 # Logs
-.services/PizzaApi.Service/pizzaapi_log.txt
-services/PizzaApi.Service/pizzaapi_log.txt
+/services/CartApi.Service/log.txt
