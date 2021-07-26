@@ -39,6 +39,9 @@ namespace CartApi.Services
         public async Task<GetProductResponse> GetByKey(int userId)
         {
             var value = await _cartStoreProvider.Get(userId.ToString());
+            
+            if (value is null) return new GetProductResponse { };
+            
             var entity = _jsonSerializer.Deserialize<ProductEntity>(value);
             var dto = _mapper.Map<ProductDto>(entity);
             return new GetProductResponse { Product = dto };

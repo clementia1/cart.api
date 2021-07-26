@@ -32,10 +32,17 @@ namespace CartApi.Controllers
         }
         
         [HttpGet("{userId:int}")]
-        public async Task<IActionResult> Add(int userId)
+        public async Task<IActionResult> Get(int userId)
         {
             var result = await _cartService.GetByKey(userId);
             return Ok(result);
+        }
+        
+        [HttpDelete("{userId:int}")]
+        public async Task<IActionResult> Delete(int userId)
+        {
+            var result = await _cartService.Remove(userId);
+            return result ? Ok() : NotFound();
         }
     }
 }

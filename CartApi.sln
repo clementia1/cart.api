@@ -7,6 +7,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{E9B2D432-512B-4352-8933-98A497EE5F99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18817095-19A2-454C-B6D2-9A8930EA0394}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfile = Dockerfile
+	Readme = Readme
+	.dockerignore = .dockerignore
+	settings.ruleset = settings.ruleset
+EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartApi", "src\CartApi\CartApi.csproj", "{43093EC4-E071-4E29-9194-6AED9EF3D291}"
 EndProject

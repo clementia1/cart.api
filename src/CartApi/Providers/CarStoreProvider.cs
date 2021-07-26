@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CartApi.Configuration;
-using CartApi.Entities;
 using CartApi.Providers.Abstractions;
 using CartApi.Services.Abstractions;
-using System.Text.Json;
 using StackExchange.Redis;
 
 namespace CartApi.Providers
@@ -33,7 +31,7 @@ namespace CartApi.Providers
             return await redis.StringSetAsync(key, value, _config.Redis.Expiry);
         }
 
-        public async Task<string> Get(string key)
+        public async Task<string?> Get(string key)
         {
             var redis = GetRedisDatabase();
             return await redis.StringGetAsync(key);

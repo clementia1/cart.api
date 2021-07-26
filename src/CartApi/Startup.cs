@@ -10,8 +10,6 @@ using CartApi.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,6 +44,7 @@ namespace CartApi
             });
             
             services.Configure<Config>(AppConfiguration);
+            services.AddTransient<IRedisConnectionService, RedisConnectionService>();
             services.AddTransient<IJsonSerializer, JsonSerializer>();
             services.AddTransient<ICartStoreProvider, CartStoreProvider>();
             services.AddTransient<ICartService, CartService>();
