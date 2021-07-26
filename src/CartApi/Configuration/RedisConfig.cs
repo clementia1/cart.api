@@ -6,6 +6,6 @@ namespace CartApi.Configuration
     {
         public string Host { get; set; } = null!;
 
-        public TimeSpan CacheTimeout { get; set; }
+        public TimeSpan Expiry { get; set; }
     }
 }
