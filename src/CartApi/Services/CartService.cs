@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using AutoMapper;
 using CartApi.Entities;
 using CartApi.Models;
@@ -33,13 +34,21 @@ namespace CartApi.Services
 
             if (cartString is null)
             {
-                var newCart = new List<ProductEntity> { entity };
+                var newCart = new HashSet<ProductEntity> { entity };
                 return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(newCart));
             }
 
-            var cart = _jsonSerializer.Deserialize<List<ProductEntity>>(cartString);
-            cart!.Add(entity);
-            return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(cart));
+            var existingCart = _jsonSerializer.Deserialize<HashSet<ProductEntity>>(cartString);
+            var cartItem = existingCart!.FirstOrDefault(i => i.Id == entity.Id);
+            
+            if (cartItem != null)
+            {
+                cartItem.Amount++;
+                return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(existingCart));
+            }
+            
+            existingCart!.Add(entity);
+            return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(existingCart));
         }
 
         public async Task<bool> Remove(int userId)
@@ -51,11 +60,11 @@ namespace CartApi.Services
         {
             var value = await _cartStoreProvider.Get(userId.ToString());
             
-            if (value is null) return new GetProductResponse { };
+            if (value is null) return new GetProductResponse();
             
-            var entity = _jsonSerializer.Deserialize<ProductEntity>(value);
-            var dto = _mapper.Map<ProductDto>(entity);
-            return new GetProductResponse { Product = dto };
+            var entity = _jsonSerializer.Deserialize<IReadOnlyCollection<ProductEntity>>(value);
+            var dto = _mapper.Map<IReadOnlyCollection<ProductDto>>(entity);
+            return new GetProductResponse { Products = dto };
         }
 
         private string GetKey(int userId)
