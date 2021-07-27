@@ -29,16 +29,16 @@ namespace CartApi.Services
         public async Task<bool> Add(int userId, ProductDto product)
         {
             var key = GetKey(userId);
-            var cartString = await _cartStoreProvider.Get(userId.ToString());
+            var cartJson = await _cartStoreProvider.Get(key);
             var entity = _mapper.Map<ProductEntity>(product);
 
-            if (cartString is null)
+            if (cartJson is null)
             {
                 var newCart = new HashSet<ProductEntity> { entity };
                 return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(newCart));
             }
 
-            var existingCart = _jsonSerializer.Deserialize<HashSet<ProductEntity>>(cartString);
+            var existingCart = _jsonSerializer.Deserialize<HashSet<ProductEntity>>(cartJson);
             var cartItem = existingCart!.FirstOrDefault(i => i.Id == entity.Id);
             
             if (cartItem != null)
@@ -51,14 +51,26 @@ namespace CartApi.Services
             return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(existingCart));
         }
 
-        public async Task<bool> Remove(int userId)
+        public async Task<bool> Remove(int userId, int productId)
         {
-            return await _cartStoreProvider.Remove(userId.ToString());
+            var key = GetKey(userId);
+            var cartJson = await _cartStoreProvider.Get(key);
+            if (cartJson is null) return false;
+            
+            var cart = _jsonSerializer.Deserialize<HashSet<ProductEntity>>(cartJson);
+            if (cart is null) return false;
+            
+            var product = cart.SingleOrDefault(i => i.Id == productId);
+            if (product is null) return false;
+            
+            cart.Remove(product);
+            
+            return await _cartStoreProvider.Add(key, _jsonSerializer.Serialize(cart));
         }
 
         public async Task<IReadOnlyCollection<ProductDto>?> Get(int userId)
         {
-            var value = await _cartStoreProvider.Get(userId.ToString());
+            var value = await _cartStoreProvider.Get(GetKey(userId));
 
             if (value is null) return null;
             

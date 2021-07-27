@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CartApi.Models.AddProduct;
+using CartApi.Models.DeleteProduct;
 using CartApi.Models.GetProduct;
 using CartApi.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -44,9 +45,9 @@ namespace CartApi.Controllers
         }
         
         [HttpDelete("{userId:int}")]
-        public async Task<IActionResult> Delete(int userId)
+        public async Task<IActionResult> Delete(int userId, [FromBody] DeleteProductRequest request)
         {
-            var result = await _cartService.Remove(userId);
+            var result = await _cartService.Remove(userId, request.ProductId);
             return result ? Ok() : NotFound();
         }
     }

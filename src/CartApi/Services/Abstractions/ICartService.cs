@@ -9,6 +9,6 @@ namespace CartApi.Services.Abstractions
     {
         Task<bool> Add(int userId, ProductDto product);
         Task<IReadOnlyCollection<ProductDto>?> Get(int userId);
-        Task<bool> Remove(int userId);
+        Task<bool> Remove(int userId, int productId);
     }
 }
