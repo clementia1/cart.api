@@ -48,7 +48,9 @@ namespace CartApi.Controllers
         public async Task<IActionResult> Delete(int userId, [FromBody] DeleteProductRequest request)
         {
             var result = await _cartService.Remove(userId, request.ProductId);
-            return result ? Ok() : NotFound();
+            return result 
+                ? Ok(new DeleteProductResponse { Message = "Successfully removed" })
+                : NotFound(new DeleteProductResponse { Message = "Item not found" });
         }
     }
 }
