@@ -69,7 +69,7 @@ namespace CartApi
             });
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod());
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseEndpoints(builder => builder.MapDefaultControllerRoute());
         }
